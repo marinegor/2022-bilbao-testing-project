@@ -41,9 +41,30 @@ def test_iterate_f(x, r, it, answ):
 @pytest.mark.slow
 def test_logistics_fuzzing(random_state):
 	num_it = 100
-	n_trials = 500_000
+	n_trials = 5_000
 	r = 1.5
 	for _ in range(n_trials):
 		x0 = random_state.random()
 		last_value = iterate_f(r=r, x=x0, it=num_it)[-1]
 		assert math.isclose(last_value, 1/3)
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize(
+	"num_iterations, num_trials, r",
+	[
+		(100_000, 100, 3.8),
+	]
+)
+def test_chaotic(num_iterations, num_trials, r, random_state):
+	for _ in range(num_trials):
+		x = random_state.random()
+		values = iterate_f(r=r, x=x, it=num_iterations)
+
+		# check that are bound
+		assert all(np.array(values) <= 1) and all(0 <= np.array(values))
+
+		# chech that are aperiodic
+		last_values = values[-10_000:]
+		assert len(set(last_values)) == len(last_values)
+
