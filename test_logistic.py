@@ -62,7 +62,8 @@ def test_chaotic(num_iterations, num_trials, r, random_state):
 		values = iterate_f(r=r, x=x, it=num_iterations)
 
 		# check that are bound
-		assert all(np.array(values) <= 1) and all(0 <= np.array(values))
+		assert all(np.array(values) <= 1)
+		assert all(0 <= np.array(values))
 
 		# chech that are aperiodic
 		last_values = values[-10_000:]
